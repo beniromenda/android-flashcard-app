@@ -12,6 +12,7 @@ import androidx.compose.material.icons.filled.ArrowForward
 import androidx.compose.material3.*
 import androidx.compose.runtime.*
 import androidx.compose.ui.Alignment
+import androidx.compose.ui.Modifier
 import androidx.compose.ui.unit.dp
 class MainActivity : ComponentActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -19,12 +20,13 @@ class MainActivity : ComponentActivity() {
 
         // This tells the activity what to display on the screen
         setContent {
-            greet()
+            MaterialTheme{
+                Surface(modifier=Modifier.fillMaxSize()){
+                    DashboardScreen()
+                }
+            }
+
         }
     }
 }
 
-@Composable
-fun greet(){
-    Text("Hello, World")
-}
