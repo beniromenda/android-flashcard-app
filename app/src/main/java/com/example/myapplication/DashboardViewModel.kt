@@ -6,7 +6,7 @@ import kotlinx.coroutines.Job
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.launch
-
+import kotlinx.coroutines.async
 sealed class DashboardUiState {
     object Loading: DashboardUiState()
     data class Success(val profile: Profile, val stats: DailyStats) : DashboardUiState()
@@ -26,9 +26,13 @@ class DashboardViewModel : ViewModel(){
         loadJob=viewModelScope.launch {
             _uiState.value = DashboardUiState.Loading
             try{
-                //This is sequential as fetchProfile finishes before fetchDailyStats
-                val profile = api.fetchProfile()
-                val stats= api.fetchDailyStats()
+                //This is sequential as fetchProfile finishes before
+                //Network calls now run concurrently
+                val profileDeferred = async {api.fetchProfile()}
+                val statsDeferred=  async {api.fetchDailyStats()}
+
+                val profile = profileDeferred.await()
+                val stats = statsDeferred.await()
                 _uiState.value= DashboardUiState.Success(profile, stats)
             }catch(e: Exception){
                 _uiState.value = DashboardUiState.Error(e.message ?: "Unknown error")

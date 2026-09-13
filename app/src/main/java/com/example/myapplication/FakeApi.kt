@@ -11,7 +11,7 @@ class FakeApi {
 
     suspend fun fetchProfile(): Profile {
         delay(2000)
-        return Profile("Alex Rivera", "Andriod Developer")
+        return Profile("Benir Odeny", "Andriod Developer")
     }
 
     suspend fun fetchDailyStats(): DailyStats {
